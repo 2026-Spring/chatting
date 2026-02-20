@@ -5,6 +5,7 @@ import com.spring_study.chatting.domain.type.UserRole;
 import com.spring_study.chatting.domain.type.Sex;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -60,7 +61,7 @@ public class User {
     private String picture;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private Provider provider;
 
     @Column(name = "social_id")
@@ -68,9 +69,6 @@ public class User {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-
-    @Column(name = "is_login", nullable = false)
-    private Boolean isLogin;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -82,6 +80,23 @@ public class User {
         }
 
         createdAt = LocalDateTime.now();
+    }
+
+    @Builder
+    public User(String email, String password, String name, String phone, Sex sex, LocalDate birthday, String introduce, String picture) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.introduce = introduce;
+        this.picture = picture;
+
+        this.role = UserRole.USER;
+        this.provider = Provider.LOCAL;
+
+        validate();
     }
 
     //생성자 안에서 사용하기
